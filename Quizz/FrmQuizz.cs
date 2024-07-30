@@ -13,11 +13,12 @@ namespace Play_Math.Quizz
         private readonly Quiz _currentQuiz;
 
         private int _currentQuestionIndex;
-
+        private List<Button> answerButtons;
         public FrmQuizz(QuestionLevel level, OperationType opType, int numberOfQuestions)
         {
             InitializeComponent();
             _currentQuiz = new Quiz(level, opType, numberOfQuestions);
+            answerButtons = new List<Button> { btnResult1, btnResult2, btnResult3, btnResult4 };
             InitializeButtonEventHandlers();
         }
 
@@ -82,25 +83,69 @@ namespace Play_Math.Quizz
             btnResult4.Text = answers[3].ToString();
         }
 
+        //private void CheckAnswer(object sender, EventArgs e)
+        //{
+        //    var button = (Button)sender;
+        //    int chosenAnswer = int.Parse(button.Text);
+        //    var currentQuestion = _currentQuiz.Questions[_currentQuestionIndex];
+
+        //    if (chosenAnswer == currentQuestion.CorrectAnswer)
+        //    {
+        //        button.BackColor = Color.Green;
+        //        _currentQuiz.CorrectAnswers++;
+        //    }
+        //    else
+        //    {
+        //        button.BackColor = Color.Red;
+
+        //        _currentQuiz.IncorrectAnswers++;
+        //    }
+
+        //    _currentQuestionIndex++;
+        //    Task.Delay(1000).ContinueWith(_ =>
+        //    {
+        //        ResetButtonColors();
+        //        DisplayNextQuestion();
+        //    }, TaskScheduler.FromCurrentSynchronizationContext());
+        //}
+
         private void CheckAnswer(object sender, EventArgs e)
         {
-            var button = (Button)sender;
-            int chosenAnswer = int.Parse(button.Text);
+            var selectedButton = (Button)sender;
+            int chosenAnswer = int.Parse(selectedButton.Text);
             var currentQuestion = _currentQuiz.Questions[_currentQuestionIndex];
+
+            Button correctButton = null;
+
+            foreach (Control control in this.Controls)
+            {
+                if (control is Button button && int.TryParse(button.Text, out int answer))
+                {
+                    if (answer == currentQuestion.CorrectAnswer)
+                    {
+                        correctButton = button;
+                        break;
+                    }
+                }
+            }
 
             if (chosenAnswer == currentQuestion.CorrectAnswer)
             {
-                button.BackColor = Color.Green;
+                selectedButton.BackColor = Color.Green;
                 _currentQuiz.CorrectAnswers++;
             }
             else
             {
-                button.BackColor = Color.Red;
+                selectedButton.BackColor = Color.Red;
+                if (correctButton != null)
+                {
+                    correctButton.BackColor = Color.Green;
+                }
                 _currentQuiz.IncorrectAnswers++;
             }
 
             _currentQuestionIndex++;
-            Task.Delay(1000).ContinueWith(_ =>
+            Task.Delay(1500).ContinueWith(_ =>
             {
                 ResetButtonColors();
                 DisplayNextQuestion();
