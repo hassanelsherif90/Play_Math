@@ -40,6 +40,14 @@ namespace Play_Math.Quizz
             _currentQuestionIndex = 0;
             _currentQuiz.GenerateQuestions();
             DisplayNextQuestion();
+            DisplayResultQuestion();
+        }
+
+        private void DisplayResultQuestion()
+        {
+            lblCorrectAnswers.Text = _currentQuiz.CorrectAnswers.ToString();
+            lblInCorrectAnswers.Text = _currentQuiz.IncorrectAnswers.ToString();
+            
         }
 
         private void DisplayNextQuestion()
@@ -83,32 +91,6 @@ namespace Play_Math.Quizz
             btnResult4.Text = answers[3].ToString();
         }
 
-        //private void CheckAnswer(object sender, EventArgs e)
-        //{
-        //    var button = (Button)sender;
-        //    int chosenAnswer = int.Parse(button.Text);
-        //    var currentQuestion = _currentQuiz.Questions[_currentQuestionIndex];
-
-        //    if (chosenAnswer == currentQuestion.CorrectAnswer)
-        //    {
-        //        button.BackColor = Color.Green;
-        //        _currentQuiz.CorrectAnswers++;
-        //    }
-        //    else
-        //    {
-        //        button.BackColor = Color.Red;
-
-        //        _currentQuiz.IncorrectAnswers++;
-        //    }
-
-        //    _currentQuestionIndex++;
-        //    Task.Delay(1000).ContinueWith(_ =>
-        //    {
-        //        ResetButtonColors();
-        //        DisplayNextQuestion();
-        //    }, TaskScheduler.FromCurrentSynchronizationContext());
-        //}
-
         private void CheckAnswer(object sender, EventArgs e)
         {
             var selectedButton = (Button)sender;
@@ -143,10 +125,13 @@ namespace Play_Math.Quizz
                 }
                 _currentQuiz.IncorrectAnswers++;
             }
+            DisplayResultQuestion();
+            lblResult.Text = currentQuestion.CorrectAnswer.ToString();
 
             _currentQuestionIndex++;
             Task.Delay(1500).ContinueWith(_ =>
             {
+                lblResult.Text = "?";
                 ResetButtonColors();
                 DisplayNextQuestion();
             }, TaskScheduler.FromCurrentSynchronizationContext());
@@ -154,10 +139,10 @@ namespace Play_Math.Quizz
 
         private void ResetButtonColors()
         {
-            btnResult1.BackColor = SystemColors.Control;
-            btnResult2.BackColor = SystemColors.Control;
-            btnResult3.BackColor = SystemColors.Control;
-            btnResult4.BackColor = SystemColors.Control;
+            btnResult1.BackColor = Color.FromArgb(16, 103, 21); ;
+            btnResult2.BackColor = Color.FromArgb(16, 103, 21);;
+            btnResult3.BackColor = Color.FromArgb(16, 103, 21);;
+            btnResult4.BackColor = Color.FromArgb(16, 103, 21); ;
         }
 
         private void ShowQuizResults()
